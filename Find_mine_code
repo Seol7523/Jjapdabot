@@ -1,0 +1,70 @@
+number_English = {1:'one',2:'two',3:'three',4:'four',5:'five',6:'six',7:'seven',8:'eight',9:'nine',0:'zero'}
+                if word.count('/') != 2:
+                    await message.channel.send("가로의 길이와 세로의 길이와 지뢰의 갯수를 '/' 으로 구분해주어야 해요!")
+                else:
+                    word = word[5:]
+                    width = word.split('/')[0]
+                    height = word.split('/')[1]
+                    mine_count = word.split('/')[2]
+                    if width.isdigit() and height.isdigit() and mine_count.isdigit():
+                        width = int(width)
+                        height = int(height)
+                        mine_count = int(mine_count)
+                        if width > 10 or height > 10:
+                            await message.channel.send("가로와 세로의 길이는 10 이하여야 해요!")
+                            return
+                        if mine_count > width * height:
+                            await message.channel.send("지뢰의 갯수는 칸의 갯수보다 많으면 안돼요!")
+                            return
+                        if check_cooltime(message.author.id , "지뢰찾기") == True:    
+                            mine_map = []
+                            for i in range(height):
+                                mine_map.append([])
+                                for j in range(width):
+                                    mine_map[i].append(0)
+                            check = 0
+                            while check < mine_count:
+                                mine_x, mine_y = random.randint(0, width - 1), random.randint(0, height - 1)
+                                if mine_map[mine_y][mine_x] != 9:
+                                    mine_map[mine_y][mine_x] = 9
+                                    if mine_x != 0:
+                                        if mine_map[mine_y][mine_x - 1] != 9:
+                                            mine_map[mine_y][mine_x - 1] += 1
+                                        if mine_y != 0:
+                                            if mine_map[mine_y - 1][mine_x - 1] != 9:
+                                                mine_map[mine_y - 1][mine_x - 1] += 1
+                                        if mine_y != height - 1:
+                                            if mine_map[mine_y + 1][mine_x - 1] != 9:
+                                                mine_map[mine_y + 1][mine_x - 1] += 1
+                                    if mine_x != width - 1:
+                                        if mine_map[mine_y][mine_x + 1] != 9:
+                                            mine_map[mine_y][mine_x + 1] += 1
+                                        if mine_y != 0:
+                                            if mine_map[mine_y - 1][mine_x + 1] != 9:
+                                                mine_map[mine_y - 1][mine_x + 1] += 1
+                                        if mine_y != height - 1:
+                                            if mine_map[mine_y + 1][mine_x + 1] != 9:
+                                                mine_map[mine_y + 1][mine_x + 1] += 1
+                                    if mine_y != 0:
+                                        if mine_map[mine_y - 1][mine_x] != 9:
+                                            mine_map[mine_y - 1][mine_x] += 1
+                                    if mine_y != height - 1:
+                                        if mine_map[mine_y + 1][mine_x] != 9:
+                                            mine_map[mine_y + 1][mine_x] += 1
+                                    check += 1
+                            word = ''
+                            for i in range(height):
+                                for j in range(width):
+                                    if mine_map[i][j] == 9:
+                                        word = word + '||:boom:||'
+                                    elif mine_map[i][j] == 0:
+                                        word = word + ':blue_square:'
+                                    else:
+                                        word = word + '||:' + number_English[mine_map[i][j]] + ':||'
+                                word = word + '\n'
+                            word = word + '지뢰갯수 : ' + str(mine_count)
+                            await message.channel.send(word)
+                        else:
+                            await message.channel.send(check_cooltime(message.author.id , "지뢰찾기"))
+                    else:
+                        await message.channel.send("'/' 사이에는 정수만 들어가야 해요!")
