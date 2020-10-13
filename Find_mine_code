@@ -68,3 +68,13 @@ number_English = {1:'one',2:'two',3:'three',4:'four',5:'five',6:'six',7:'seven',
                             await message.channel.send(check_cooltime(message.author.id , "지뢰찾기"))
                     else:
                         await message.channel.send("'/' 사이에는 정수만 들어가야 해요!")
+
+"""
+사용언어 : python 3.7.4
+사용모듈 : discord.py
+지뢰찾기 코드 입니다
+들여쓰기는 복사붙어 넣기 특성상 이상할수 있습니다
+위 문제는 빠른 시일내에 수정하겠습니다
+ctx를 사용하시는 분들은 코드를 조금만 바꾸시면 됩니다
+Made by 설망래 , 이끼낀금화
+"""
